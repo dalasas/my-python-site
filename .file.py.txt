@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PyGalaxy — دروس بايثون تفاعلية بثلاث لغات</title>
+  <meta name="description" content="منهج تفاعلي لتعلّم بايثون من الصفر حتى الاحتراف — يعمل بالكامل بـ HTML/CSS/JS فقط. يدعم العربية والإنجليزية والفرنسية، تقدّم محفوظ، اختبارات فورية، ومحرّر كود بسيط." />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ===========================================================
+       PyGalaxy — Multilingual, Neon Futuristic UI (AR / EN / FR)
+       Pure HTML/CSS/JS — No external libraries.
+       =========================================================== */
+
+    :root{
+      --bg:#0a0e1a;           /* Background */
+      --panel:#0e1326;        /* Panels */
+      --panel-2:#0c1020;      /* Secondary panel */
+      --text:#eef2ff;         /* Main text */
+      --muted:#a5b4fc;        /* Muted text */
+      --accent:#22d3ee;       /* Cyan */
+      --accent-2:#8b5cf6;     /* Purple */
+      --accent-3:#f472b6;     /* Pink */
+      --good:#22c55e;         /* Green */
+      --warn:#f59e0b;         /* Yellow */
+      --bad:#ef4444;          /* Red */
+      --border:#1f2547;       /* Border */
+      --glass:rgba(255,255,255,.06);
+      --shadow:0 20px 60px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.25);
+      --radius:20px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      background:
+        radial-gradient(1000px 500px at -10% -10%, rgba(34,211,238,.15), transparent 60%),
+        radial-gradient(900px 500px at 110% 0%, rgba(139,92,246,.14), transparent 60%),
+        linear-gradient(180deg, #060913, var(--bg) 30%, #060913 100%);
+      font-family: "Cairo", "Inter", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial;
+      overflow-x:hidden;
+    }
+
+    /* ===== Layout ===== */
+    .app{display:grid; grid-template-columns: 300px 1fr; min-height:100vh; gap:0}
+    aside{
+      position:sticky; top:0; height:100vh; overflow:auto; padding:18px;
+      border-inline-start:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.0)), var(--panel);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    main{padding:18px 18px 60px;}
+
+    /* ===== Header / Hero ===== */
+    .hero{
+      position:relative;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .hero::before{
+      content:"";
+      position:absolute; inset:-30%;
+      background:
+        radial-gradient(600px 200px at 80% 0%, rgba(34,211,238,.15), transparent 40%),
+        radial-gradient(700px 240px at 10% 120%, rgba(139,92,246,.15), transparent 40%);
+      filter: blur(10px); z-index:0; pointer-events:none
+    }
+    .badge{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:6px 12px; border:1px solid var(--border);
+      border-radius:999px; color:var(--muted); background:rgba(255,255,255,.04)
+    }
+    .title{
+      position:relative; z-index:1; margin:10px 0 4px;
+      font-size:clamp(26px, 3.6vw, 44px); line-height:1.1
+    }
+    .title span{
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+      -webkit-background-clip:text; background-clip:text; color:transparent
+    }
+    .lead{margin:0; color:var(--muted)}
+
+    /* ===== Topbar (inside hero) ===== */
+    .topbar{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:8px
+    }
+    .lang-picker{
+      display:flex; gap:8px; align-items:center; background:rgba(255,255,255,.04);
+      border:1px solid var(--border); border-radius:999px; padding:6px 10px
+    }
+    .lang-picker select{
+      background:transparent; border:0; color:var(--text); font-weight:700; outline:none; cursor:pointer
+    }
+    .lang-note{color:var(--muted); font-size:12px}
+
+    /* ===== Sidebar ===== */
+    .logo{display:flex; gap:10px; align-items:center; font-weight:800; letter-spacing:.5px; margin-bottom:12px}
+    .logo .dot{width:10px; height:10px; border-radius:999px; background:conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent-3)); filter:drop-shadow(0 0 8px rgba(34,211,238,.6))}
+    .search{position:relative; margin:14px 0}
+    .search input{width:100%; padding:10px 36px 10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--panel-2); color:var(--text)}
+    .search svg{position:absolute; left:10px; top:50%; transform:translateY(-50%); opacity:.7}
+    .nav-section-title{margin:16px 6px 8px; color:var(--muted); font-weight:700; font-size:13px}
+    .lesson-link{display:flex; gap:8px; padding:10px; margin:6px 0; border-radius:12px; border:1px solid var(--border); background:var(--panel-2); cursor:pointer; align-items:center}
+    .lesson-link:hover{background:rgba(255,255,255,.06)}
+    .lesson-link.done{outline:2px solid rgba(34,197,94,.35)}
+    .lesson-link small{color:var(--muted)}
+    .stats{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px}
+    .stat{padding:10px; border:1px dashed var(--border); border-radius:14px; background:rgba(255,255,255,.03)}
+    .bar{height:8px; background:#0b1022; border-radius:999px; overflow:hidden; border:1px solid var(--border)}
+    .bar .fill{height:100%; width:0%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow:0 0 16px rgba(34,211,238,.6) inset}
+    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .chip{padding:6px 10px; border-radius:999px; border:1px dashed var(--border); background:rgba(255,255,255,.04); font-size:12px; color:var(--muted); cursor:pointer}
+    .chip.active{outline:2px solid rgba(139,92,246,.35)}
+
+    /* ===== Cards / Sections ===== */
+    .section{margin-top:18px}
+    .card{border:1px solid var(--border); border-radius:var(--radius); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); box-shadow:var(--shadow)}
+    .card .head{display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid var(--border)}
+    .card .head h2{margin:0; font-size:20px}
+    .card .head .actions{display:flex; gap:8px; flex-wrap:wrap}
+    .btn{cursor:pointer; border:1px solid var(--border); background:rgba(255,255,255,.04); color:var(--text); padding:8px 12px; border-radius:12px; font-weight:700}
+    .btn:hover{background:rgba(255,255,255,.08)}
+    .btn.ghost{background:transparent}
+    .btn.slim{padding:6px 10px; font-weight:600; border-radius:10px}
+    .content{padding:16px}
+    .two-col{display:grid; grid-template-columns:1.1fr 1fr; gap:14px}
+    @media (max-width: 1000px){
+      .app{grid-template-columns: 1fr}
+      aside{position:static; height:auto}
+      .two-col{grid-template-columns:1fr}
+    }
+
+    /* ===== Lesson ===== */
+    .lesson{border:1px solid var(--border); border-radius:16px; margin:12px 0; overflow:hidden}
+    .lesson .header{display:flex; justify-content:space-between; align-items:center; gap:8px; padding:12px 14px; background:var(--panel-2); cursor:pointer}
+    .lesson .header h3{margin:0; font-size:18px}
+    .lesson .meta{display:flex; gap:8px; align-items:center; color:var(--muted); font-size:12px}
+    .lesson .body{display:none; padding:14px; background:rgba(255,255,255,.02)}
+    .lesson.open .body{display:block}
+    .kbd{padding:2px 8px; border:1px solid var(--border); border-bottom-width:3px; border-radius:8px; background:rgba(255,255,255,.04)}
+
+    /* ===== Code Editor (fake-run) ===== */
+    .codebox{border:1px solid var(--border); border-radius:14px; overflow:hidden; background:linear-gradient(180deg, #0b0f24, #0a0d20)}
+    .codebox .toolbar{display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-bottom:1px solid var(--border)}
+    .codebox .toolbar .title{font-weight:700; color:#c7d2fe}
+    .codebox .toolbar .actions{display:flex; gap:8px}
+    textarea.editor{width:100%; min-height:130px; resize:vertical; padding:12px; color:#e5e7eb; background:transparent; border:0; outline:none; font-family:var(--mono); font-size:13.8px; line-height:1.6}
+    .output{padding:12px; font-family:var(--mono); background:#0b1120; color:#e5e7eb; border-top:1px dashed var(--border); min-height:46px}
+    .hint{margin-top:8px; color:var(--muted); font-size:13px}
+
+    /* ===== Quiz ===== */
+    .quiz{border:1px dashed var(--border); border-radius:12px; padding:14px; background:rgba(255,255,255,.03); margin-top:8px}
+    .quiz h4{margin:0 0 8px}
+    .quiz .option{display:flex; gap:8px; align-items:center; padding:8px; border-radius:10px; border:1px solid var(--border); cursor:pointer; margin:6px 0; background:var(--panel-2)}
+    .quiz .option input{accent-color:var(--accent-2)}
+    .quiz .result{margin-top:8px; font-weight:700}
+
+    /* ===== Footer ===== */
+    footer{margin:24px 0 0; color:var(--muted); text-align:center}
+
+    /* ===== Animations ===== */
+    @keyframes float{0%{transform:translateY(0)} 50%{transform:translateY(-6px)} 100%{transform:translateY(0)}}
+    .float{animation: float 6s ease-in-out infinite}
+
+    /* ===== Toggle ===== */
+    .switch{display:inline-flex; gap:10px; align-items:center}
+    .switch input{display:none}
+    .switch .track{width:54px; height:28px; background:var(--panel-2); border:1px solid var(--border); border-radius:999px; position:relative}
+    .switch .thumb{position:absolute; top:2px; right:2px; width:24px; height:24px; border-radius:50%; background:linear-gradient(180deg, var(--accent), var(--accent-2)); box-shadow:0 4px 12px rgba(34,211,238,.4)}
+    .switch input:checked + .track .thumb{right:28px}
+
+    /* ===== Toast ===== */
+    .toast{position:fixed; bottom:20px; right:20px; z-index:9999; padding:12px 14px; background:rgba(17,24,39,.9); color:#fff; border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow); display:none}
+    .toast.show{display:block}
+
+    /* ===== Utilities ===== */
+    .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    .spacer{flex:1}
+    .muted{color:var(--muted)}
+    .pill{display:inline-flex; gap:6px; align-items:center; border:1px solid var(--border); padding:4px 8px; border-radius:999px; background:rgba(255,255,255,.04); font-size:12px}
+    .sep{opacity:.4}
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <!-- ================= Sidebar ================= -->
+    <aside>
+      <div class="logo" title="PyGalaxy">
+        <span class="dot" aria-hidden="true"></span>
+        <div>PyGalaxy <small style="color:var(--muted); font-weight:600">by HTML/CSS/JS</small></div>
+      </div>
+
+      <div class="search" role="search">
+        <input id="search" type="text" placeholder="ابحث في الدروس…" aria-label="Search lessons"/>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="nav-section-title" data-i18n="levels">المستويات</div>
+      <div class="chips" id="levelChips">
+        <div class="chip active" data-filter="all" data-i18n="level_all">الكل</div>
+        <div class="chip" data-filter="beginner" data-i18n="level_beginner">مبتدئ</div>
+        <div class="chip" data-filter="intermediate" data-i18n="level_intermediate">متوسط</div>
+        <div class="chip" data-filter="advanced" data-i18n="level_advanced">متقدم</div>
+      </div>
+
+      <div class="nav-section-title" data-i18n="lessons">الدروس</div>
+      <div id="lessonList" aria-live="polite">
+        <!-- Filled dynamically -->
+      </div>
+
+      <div class="stats" aria-label="Progress">
+        <div class="stat">
+          <div class="row" style="justify-content:space-between; margin-bottom:6px">
+            <strong data-i18n="progress">التقدم</strong><span id="progressPct">0%</span>
+          </div>
+          <div class="bar"><div class="fill" id="progressBar"></div></div>
+        </div>
+        <div class="stat">
+          <div class="row" style="justify-content:space-between; margin-bottom:6px">
+            <strong data-i18n="units">الوحدات</strong><span id="completedCount">0/0</span>
+          </div>
+          <div style="font-size:12px; color:var(--muted)" id="streakMsg">حافظ على streak التعلم اليومي 🔥</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= Main ================= -->
+    <main>
+      <section class="hero card" aria-label="Intro">
+        <div class="topbar">
+          <div class="badge float" id="badgeLine">🚀 رحلة احتراف بايثون — تدرّج ذكي + تفاعل ممتع</div>
+
+          <div class="row">
+            <div class="lang-picker" title="Language / اللغة / Langue">
+              <span class="muted" id="langLabel">🌐 اللغة</span>
+              <select id="langSelect" aria-label="Language selector">
+                <option value="ar">العربية</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+              </select>
+            </div>
+
+            <div class="pill" title="Export / Import">
+              <button class="btn slim" id="exportBtn" data-i18n="export">تصدير التقدّم</button>
+              <span class="sep">|</span>
+              <label class="btn slim" for="importFile" id="importLbl" data-i18n="import">استيراد</label>
+              <input id="importFile" type="file" accept="application/json" style="display:none"/>
+            </div>
+          </div>
+        </div>
+
+        <h1 class="title" id="heroTitle">تعلم <span>Python</span> من الصفر حتى الاحتراف — خطوة بخطوة</h1>
+        <p class="lead" id="heroLead">واجهة خفيفة، ألوان نيون تبعث على النشاط، تقدّم محفوظ في المتصفح، اختبارات فورية، ومحرّر كود بسيط يوضح المخرجات المتوقعة. — بدون أي مكتبات خارجية.</p>
+      </section>
+
+      <!-- ====== Controls ====== -->
+      <div class="section card" aria-label="Control Panel">
+        <div class="head">
+          <h2 data-i18n="control_panel">لوحة التحكم</h2>
+          <div class="actions">
+            <label class="switch" title="Smart mode">
+              <input type="checkbox" id="smartMode" />
+              <div class="track"><div class="thumb"></div></div>
+            </label>
+            <span class="muted" id="smartLabel">وضع الإنجاز الذكي</span>
+            <button class="btn" id="expandAll" data-i18n="open_all">فتح الكل</button>
+            <button class="btn ghost" id="collapseAll" data-i18n="collapse_all">طيّ الكل</button>
+            <button class="btn" id="resetProgress" data-i18n="reset">تصفير التقدم</button>
+          </div>
+        </div>
+        <div class="content">
+          <div class="two-col">
+            <div>
+              <p id="tipTitle">نصيحة 👇</p>
+              <ul id="tipsList">
+                <li>اقرأ الدرس، جرّب في المحرر، ثم اختبر نفسك في كويز سريع.</li>
+                <li>ضع علامة <span class="kbd">تم</span> عند فهمك للدرس — يُحسب التقدم تلقائيًا.</li>
+                <li>استخدم البحث للوصول السريع لموضوع محدد.</li>
+              </ul>
+            </div>
+            <div>
+              <p class="muted" id="smartDesc">وضع الإنجاز الذكي يفتح لك الدرس التالي تلقائيًا بعد اجتياز الكويز. إن أحببت التحدي، أطفِئه وتجوّل بحرية.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== Curriculum ====== -->
+      <div id="curriculum" class="section" aria-live="polite" aria-label="Curriculum">
+        <!-- Lessons build dynamically -->
+      </div>
+
+      <footer>
+        <span id="footerMade">صُنع بحب وبقوة الـ</span> <span style="color:var(--accent)">HTML/CSS/JS</span>.
+        <span id="footerHydrate">لا تنسَ شرب الماء وحل مسألة إضافية اليوم!</span> 🧠💧
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /* ============================================================
+       Multilingual i18n (AR/EN/FR) — UI strings & helpers
+       ============================================================ */
+
+    const LANG_KEY = 'pygalaxy.lang.v1';
+    const STORAGE_KEY = 'pygalaxy.progress.v1';
+    const SMART_KEY   = 'pygalaxy.smartMode.v1';
+
+    const i18n = {
+      ar: {
+        _dir: 'rtl',
+        _lang: 'ar',
+        _name: 'العربية',
+        hero_badge: "🚀 رحلة احتراف بايثون — تدرّج ذكي + تفاعل ممتع",
+        hero_title: "تعلم <span>Python</span> من الصفر حتى الاحتراف — خطوة بخطوة",
+        hero_lead:  "واجهة خفيفة، ألوان نيون تبعث على النشاط، تقدّم محفوظ في المتصفح، اختبارات فورية، ومحرّر كود بسيط يوضح المخرجات المتوقعة. — بدون أي مكتبات خارجية.",
+        lang_label: "🌐 اللغة",
+        export: "تصدير التقدّم",
+        import: "استيراد",
+        levels: "المستويات",
+        lessons: "الدروس",
+        progress: "التقدم",
+        units: "الوحدات",
+        streak: "حافظ على streak التعلم اليومي 🔥",
+        level_all: "الكل",
+        level_beginner: "مبتدئ",
+        level_intermediate: "متوسط",
+        level_advanced: "متقدم",
+        cp: "لوحة التحكم",
+        open_all: "فتح الكل",
+        collapse_all: "طيّ الكل",
+        reset: "تصفير التقدم",
+        tip_title: "نصيحة 👇",
+        tips: [
+          "اقرأ الدرس، جرّب في المحرر، ثم اختبر نفسك في كويز سريع.",
+          "ضع علامة <span class='kbd'>تم</span> عند فهمك للدرس — يُحسب التقدم تلقائيًا.",
+          "استخدم البحث للوصول السريع لموضوع محدد."
+        ],
+        smart_label: "وضع الإنجاز الذكي",
+        smart_desc: "وضع الإنجاز الذكي يفتح لك الدرس التالي تلقائيًا بعد اجتياز الكويز. إن أحببت التحدي، أطفِئه وتجوّل بحرية.",
+        search_ph: "ابحث في الدروس: متغيرات، حلقات، توابع…",
+        code_title: "مثال بايثون",
+        copy: "نسخ",
+        run: "تشغيل (محاكاة)",
+        expected: "— المخرجات المتوقعة ستظهر هنا —",
+        quiz_title: "⚡ اختبار سريع",
+        btn_done: "تم",
+        btn_show: "عرض",
+        status_done: "✅ تم وضع علامة تم",
+        status_cleared: "تم تصفير التقدم",
+        toast_copied: "✅ تم نسخ الكود",
+        toast_next: "➡️ تم فتح الدرس التالي",
+        choose_first: "اختر إجابة أولاً",
+        correct: "إجابة صحيحة 🎉",
+        wrong: "إجابة خاطئة — جرّب مرة أخرى",
+        footer_made: "صُنع بحب وبقوة الـ",
+        footer_hydrate: "لا تنسَ شرب الماء وحل مسألة إضافية اليوم!",
+        levelsBadge: {
+          beginner: "🥚 مبتدئ",
+          intermediate: "🧩 متوسط",
+          advanced: "🚀 متقدّم"
+        },
+        icons: {book:"📘", check:"✅"},
+        confirm_reset: "هل تريد تصفير تقدمك بالكامل؟"
+      },
+      en: {
+        _dir: 'ltr',
+        _lang: 'en',
+        _name: 'English',
+        hero_badge: "🚀 Master Python — Smart progression + fun interactivity",
+        hero_title: "Learn <span>Python</span> from Zero to Hero — step by step",
+        hero_lead:  "Lightweight UI with neon vibes, saved progress, instant quizzes, and a simple code box that shows expected output — no external libraries.",
+        lang_label: "🌐 Language",
+        export: "Export Progress",
+        import: "Import",
+        levels: "Levels",
+        lessons: "Lessons",
+        progress: "Progress",
+        units: "Units",
+        streak: "Keep your daily learning streak 🔥",
+        level_all: "All",
+        level_beginner: "Beginner",
+        level_intermediate: "Intermediate",
+        level_advanced: "Advanced",
+        cp: "Control Panel",
+        open_all: "Open All",
+        collapse_all: "Collapse All",
+        reset: "Reset Progress",
+        tip_title: "Tip 👇",
+        tips: [
+          "Read the lesson, try it in the editor, then take the quick quiz.",
+          "Mark <span class='kbd'>Done</span> when you understand — progress updates automatically.",
+          "Use search to jump to a specific topic."
+        ],
+        smart_label: "Smart Progress",
+        smart_desc: "Smart Mode opens the next lesson automatically after you pass a quiz. Prefer exploring? Turn it off and roam freely.",
+        search_ph: "Search lessons: variables, loops, functions…",
+        code_title: "Python Example",
+        copy: "Copy",
+        run: "Run (simulate)",
+        expected: "— Expected output appears here —",
+        quiz_title: "⚡ Quick Quiz",
+        btn_done: "Done",
+        btn_show: "Show",
+        status_done: "✅ Marked as done",
+        status_cleared: "Progress reset",
+        toast_copied: "✅ Code copied",
+        toast_next: "➡️ Next lesson opened",
+        choose_first: "Choose an answer first",
+        correct: "Correct 🎉",
+        wrong: "Wrong — try again",
+        footer_made: "Built with love and",
+        footer_hydrate: "Don't forget water and an extra problem today!",
+        levelsBadge: {
+          beginner: "🥚 Beginner",
+          intermediate: "🧩 Intermediate",
+          advanced: "🚀 Advanced"
+        },
+        icons: {book:"📘", check:"✅"},
+        confirm_reset: "Do you want to reset your progress?"
+      },
+      fr: {
+        _dir: 'ltr',
+        _lang: 'fr',
+        _name: 'Français',
+        hero_badge: "🚀 Maîtrisez Python — progression intelligente + interactivité",
+        hero_title: "Apprenez <span>Python</span> de zéro à expert — pas à pas",
+        hero_lead:  "Interface légère style néon, progression sauvegardée, quiz immédiats et éditeur simple affichant la sortie attendue — sans bibliothèques externes.",
+        lang_label: "🌐 Langue",
+        export: "Exporter la progression",
+        import: "Importer",
+        levels: "Niveaux",
+        lessons: "Leçons",
+        progress: "Progression",
+        units: "Unités",
+        streak: "Préservez votre série d'apprentissage quotidienne 🔥",
+        level_all: "Tous",
+        level_beginner: "Débutant",
+        level_intermediate: "Intermédiaire",
+        level_advanced: "Avancé",
+        cp: "Panneau de contrôle",
+        open_all: "Tout ouvrir",
+        collapse_all: "Tout réduire",
+        reset: "Réinitialiser",
+        tip_title: "Astuce 👇",
+        tips: [
+          "Lisez la leçon, essayez dans l’éditeur, puis faites le quiz.",
+          "Cochez <span class='kbd'>Terminé</span> lorsque c’est compris — la progression se met à jour automatiquement.",
+          "Utilisez la recherche pour aller directement à un sujet."
+        ],
+        smart_label: "Progression Intelligente",
+        smart_desc: "Le mode intelligent ouvre la leçon suivante automatiquement après réussite du quiz. Vous préférez explorer ? Désactivez-le.",
+        search_ph: "Rechercher : variables, boucles, fonctions…",
+        code_title: "Exemple Python",
+        copy: "Copier",
+        run: "Exécuter (simulation)",
+        expected: "— La sortie attendue s’affichera ici —",
+        quiz_title: "⚡ Quiz rapide",
+        btn_done: "Terminé",
+        btn_show: "Afficher",
+        status_done: "✅ Marqué comme terminé",
+        status_cleared: "Progression réinitialisée",
+        toast_copied: "✅ Code copié",
+        toast_next: "➡️ Leçon suivante ouverte",
+        choose_first: "Choisissez d’abord une réponse",
+        correct: "Correct 🎉",
+        wrong: "Faux — réessayez",
+        footer_made: "Fait avec amour et",
+        footer_hydrate: "N’oubliez pas de boire de l’eau et de résoudre un exercice de plus aujourd’hui !",
+        levelsBadge: {
+          beginner: "🥚 Débutant",
+          intermediate: "🧩 Intermédiaire",
+          advanced: "🚀 Avancé"
+        },
+        icons: {book:"📘", check:"✅"},
+        confirm_reset: "Voulez-vous vraiment réinitialiser votre progression ?"
+      }
+    };
+
+    function getLang(){
+      return localStorage.getItem(LANG_KEY) || (navigator.language||'ar').startsWith('ar') ? 'ar' :
+             (navigator.language||'en').startsWith('fr') ? 'fr' : 'en';
+    }
+
+    function setLang(lang){
+      localStorage.setItem(LANG_KEY, lang);
+    }
+
+    /* ============================================================
+       Lessons data — multilingual titles, summaries & quizzes.
+       Code/expect are language-agnostic (Python).
+       ============================================================ */
+
+    const lessons = [
+      {
+        id:"intro", level:"beginner",
+        title:{ar:"مقدمة: ما هي بايثون؟", en:"Introduction: What is Python?", fr:"Introduction : Qu’est-ce que Python ?"},
+        keywords:{
+          ar:["intro","beginner","تعريف"], en:["intro","beginner","definition"], fr:["intro","débutant","définition"]
+        },
+        summary:{
+          ar:"بايثون لغة برمجة عالية المستوى، سهلة القراءة ومتعددة الاستخدامات: من السكربتات إلى الذكاء الاصطناعي.",
+          en:"Python is a high-level programming language that is easy to read and versatile, from small scripts to AI.",
+          fr:"Python est un langage de haut niveau, lisible et polyvalent : des scripts à l’IA."
+        },
+        code:`# أول برنامج\nprint('Hello, Python!')`,
+        expect:`Hello, Python!`,
+        quiz:{
+          q:{ar:"ما الذي تقوم به الدالة print؟", en:"What does the print function do?", fr:"Que fait la fonction print ?"},
+          options:{
+            ar:["تقرأ من الملف","تطبع إلى المخرجات","تحذف متغيراً","توقف البرنامج"],
+            en:["Reads from a file","Prints to output","Deletes a variable","Stops the program"],
+            fr:["Lit depuis un fichier","Affiche sur la sortie","Supprime une variable","Arrête le programme"]
+          },
+          a:1
+        }
+      },
+      {
+        id:"vars", level:"beginner",
+        title:{ar:"المتغيرات وأنواع البيانات الأساسية", en:"Variables & Basic Data Types", fr:"Variables et types de base"},
+        keywords:{
+          ar:["variables","types","int","str"], en:["variables","types","int","str"], fr:["variables","types","int","str"]
+        },
+        summary:{
+          ar:"المتغير صندوق يحمل قيمة. الأنواع: int, float, str, bool. لا حاجة لتصريح النوع صراحة.",
+          en:"A variable stores a value. Core types: int, float, str, bool. No explicit type declaration needed.",
+          fr:"Une variable stocke une valeur. Types : int, float, str, bool. Pas de déclaration explicite."
+        },
+        code:`x = 5\ny = 2.5\nname = 'Ali'\nis_student = True\nprint(type(x), type(y), type(name), type(is_student))`,
+        expect:`<class 'int'> <class 'float'> <class 'str'> <class 'bool'>`,
+        quiz:{
+          q:{ar:"أي نوع يمثل القيم المنطقية؟", en:"Which type represents boolean values?", fr:"Quel type représente les booléens ?"},
+          options:{
+            ar:["int","str","bool","float"],
+            en:["int","str","bool","float"],
+            fr:["int","str","bool","float"]
+          },
+          a:2
+        }
+      },
+      {
+        id:"ops", level:"beginner",
+        title:{ar:"العمليات الحسابية والمنطقية", en:"Arithmetic & Logical Operators", fr:"Opérateurs arithmétiques et logiques"},
+        keywords:{ar:["operators","+","and","or"], en:["operators","+","and","or"], fr:["opérateurs","+","and","or"]},
+        summary:{
+          ar:"+ - * / // % ** للحساب. منطق: and, or, not.",
+          en:"+ - * / // % ** for math. Logic: and, or, not.",
+          fr:"+ - * / // % ** pour le calcul. Logique : and, or, not."
+        },
+        code:`a, b = 7, 3\nprint(a + b, a - b, a * b, a / b)\nprint(a // b, a % b, a ** b)\nprint((a > b) and (b > 0))`,
+        expect:`10 4 21 2.3333333333333335\n2 1 343\nTrue`,
+        quiz:{
+          q:{ar:"ناتج 7//3 يساوي؟", en:"What is 7//3?", fr:"Quel est le résultat de 7//3 ?"},
+          options:{
+            ar:["2","2.3","1","0"],
+            en:["2","2.3","1","0"],
+            fr:["2","2,3","1","0"]
+          },
+          a:0
+        }
+      },
+      {
+        id:"strings", level:"beginner",
+        title:{ar:"السلاسل النصية والعمليات عليها", en:"Strings & Common Operations", fr:"Chaînes de caractères et opérations"},
+        keywords:{ar:["strings","slice","len"], en:["strings","slice","len"], fr:["chaînes","slice","len"]},
+        summary:{
+          ar:"السلاسل غير قابلة للتغيير. len، فهرسة، تقطيع، upper/lower/replace.",
+          en:"Strings are immutable. Use len, indexing, slicing and methods like upper/lower/replace.",
+          fr:"Les chaînes sont immuables. len, indexation, découpage, upper/lower/replace."
+        },
+        code:`s = 'Python'\nprint(len(s))\nprint(s[0], s[-1])\nprint(s[1:4])\nprint(s.lower(), s.upper())`,
+        expect:`6\nP n\nyth\npython PYTHON`,
+        quiz:{
+          q:{ar:"هل السلاسل النصية قابلة للتغيير؟", en:"Are strings mutable?", fr:"Les chaînes sont-elles mutables ?"},
+          options:{
+            ar:["نعم","لا"], en:["Yes","No"], fr:["Oui","Non"]
+          },
+          a:1
+        }
+      },
+      {
+        id:"if", level:"beginner",
+        title:{ar:"التفرع الشرطي if/elif/else", en:"Conditional Branching if/elif/else", fr:"Branchement conditionnel if/elif/else"},
+        keywords:{ar:["if","elif","else"], en:["if","elif","else"], fr:["if","elif","else"]},
+        summary:{
+          ar:"اتخاذ قرار حسب شرط. انتبه للمسافات البادئة.",
+          en:"Make decisions based on conditions. Mind indentation.",
+          fr:"Décider selon une condition. Attention à l’indentation."
+        },
+        code:`score = 87\nif score >= 90:\n    grade = 'A'\nelif score >= 80:\n    grade = 'B'\nelse:\n    grade = 'C'\nprint(grade)`,
+        expect:`B`,
+        quiz:{
+          q:{ar:"الكلمة المفتاحية للاختبار الثاني؟", en:"Keyword for the second test branch?", fr:"Mot-clé pour la seconde branche ?"},
+          options:{
+            ar:["elseif","elif","else if","elsif"],
+            en:["elseif","elif","else if","elsif"],
+            fr:["elseif","elif","else if","elsif"]
+          },
+          a:1
+        }
+      },
+      {
+        id:"loops", level:"beginner",
+        title:{ar:"الحلقات for و while", en:"Loops: for & while", fr:"Boucles : for & while"},
+        keywords:{ar:["loop","for","while","range"], en:["loop","for","while","range"], fr:["boucle","for","while","range"]},
+        summary:{
+          ar:"for للتكرار على عناصر، while للتكرار بشرط. استخدم range للأعداد.",
+          en:"Use for to iterate elements, while to loop with a condition. range for sequences.",
+          fr:"for pour itérer, while pour une condition. range pour les séquences."
+        },
+        code:`for i in range(3):\n    print(i)\n\ncount = 3\nwhile count>0:\n    print('tick', count)\n    count -= 1`,
+        expect:`0\n1\n2\ntick 3\ntick 2\ntick 1`,
+        quiz:{
+          q:{ar:"ما الدالة التي تولد تسلسلاً من الأعداد؟", en:"Which function generates a sequence of numbers?", fr:"Quelle fonction génère une séquence de nombres ?"},
+          options:{
+            ar:["list","range","seq","iter"],
+            en:["list","range","seq","iter"],
+            fr:["list","range","seq","iter"]
+          },
+          a:1
+        }
+      },
+      {
+        id:"funcs", level:"intermediate",
+        title:{ar:"الدوال (Functions)", en:"Functions", fr:"Fonctions"},
+        keywords:{ar:["def","return","parameters"], en:["def","return","parameters"], fr:["def","return","paramètres"]},
+        summary:{
+          ar:"تعريف دالة بكلمة def. return لإرجاع قيمة. وسائط positional/keyword والافتراضية.",
+          en:"Define with def; return to give back a value. Positional/keyword & default args.",
+          fr:"Définir avec def ; return pour renvoyer. Arguments positionnels/nommés & par défaut."
+        },
+        code:`def area(w, h=1):\n    return w*h\n\nprint(area(3,4))\nprint(area(5))\nprint(area(h=2, w=10))`,
+        expect:`12\n5\n20`,
+        quiz:{
+          q:{ar:"كيف تُعرّف دالة؟", en:"How do you define a function?", fr:"Comment définir une fonction ?"},
+          options:{
+            ar:["func name()","def name():","function name()","define name()"],
+            en:["func name()","def name():","function name()","define name()"],
+            fr:["func name()","def name():","function name()","define name()"]
+          },
+          a:1
+        }
+      },
+      {
+        id:"lists", level:"intermediate",
+        title:{ar:"القوائم (List) والعمليات المهمة", en:"Lists & Key Operations", fr:"Listes et opérations"},
+        keywords:{ar:["list","append","slice","mutability"], en:["list","append","slice","mutability"], fr:["liste","append","slice","mutabilité"]},
+        summary:{
+          ar:"قابلة للتغيير. append, extend, insert, pop, remove, sort, slicing.",
+          en:"Mutable. append, extend, insert, pop, remove, sort, slicing.",
+          fr:"Mutable. append, extend, insert, pop, remove, sort, slicing."
+        },
+        code:`nums = [3,1,4]\nnums.append(1)\nnums.sort()\nprint(nums, nums[1:3])`,
+        expect:`[1, 1, 3, 4] [1, 3]`,
+        quiz:{
+          q:{ar:"أي البنى التالية قابلة للتغيير؟", en:"Which structure is mutable?", fr:"Quelle structure est mutable ?"},
+          options:{
+            ar:["list","tuple","str","frozenset"],
+            en:["list","tuple","str","frozenset"],
+            fr:["list","tuple","str","frozenset"]
+          },
+          a:0
+        }
+      },
+      {
+        id:"dicts", level:"intermediate",
+        title:{ar:"القواميس (Dict)", en:"Dictionaries (dict)", fr:"Dictionnaires (dict)"},
+        keywords:{ar:["dict","mapping","keys","values"], en:["dict","mapping","keys","values"], fr:["dict","mapping","keys","values"]},
+        summary:{
+          ar:"مفاتيح لقيم. الوصول بالمفتاح. keys, values, items, get, update.",
+          en:"Keys mapped to values. Access by key. keys, values, items, get, update.",
+          fr:"Clés vers valeurs. Accès par clé. keys, values, items, get, update."
+        },
+        code:`user = {"name":"Sara","age":20}\nuser["lang"] = "Python"\nprint(user.get("age"), list(user.keys()))`,
+        expect:`20 ['name', 'age', 'lang']`,
+        quiz:{
+          q:{ar:"ما الذي يميز dict؟", en:"What characterizes dict?", fr:"Qu’est-ce qui caractérise dict ?"},
+          options:{
+            ar:["مرتبة دائمًا","تقبل مفاتيح متكررة","تربط مفتاحًا بقيمة","تخزن أرقامًا فقط"],
+            en:["Always ordered","Allows duplicate keys","Maps a key to a value","Stores only numbers"],
+            fr:["Toujours ordonné","Clés dupliquées autorisées","Associe clé à valeur","Stocke seulement des nombres"]
+          },
+          a:2
+        }
+      },
+      {
+        id:"sets", level:"intermediate",
+        title:{ar:"المجموعات (Set)", en:"Sets", fr:"Ensembles (Set)"},
+        keywords:{ar:["set","unique","union","intersection"], en:["set","unique","union","intersection"], fr:["set","unique","union","intersection"]},
+        summary:{
+          ar:"عناصر فريدة. اتحاد |، تقاطع &، فرق -.",
+          en:"Unique elements. Union |, intersection &, difference -.",
+          fr:"Éléments uniques. Union |, intersection &, différence -."
+        },
+        code:`a = {1,2,3}\nb = {3,4}\nprint(a|b, a&b, a-b)`,
+        expect:`{1, 2, 3, 4} {3} {1, 2}`,
+        quiz:{
+          q:{ar:"نتيجة {1,2}+{2,3} في set؟", en:"Result of {1,2}+{2,3} as a set?", fr:"Résultat de {1,2}+{2,3} en set ?"},
+          options:{
+            ar:["{1,2,2,3}","{1,2,3}","{1,3}","{2}"],
+            en:["{1,2,2,3}","{1,2,3}","{1,3}","{2}"],
+            fr:["{1,2,2,3}","{1,2,3}","{1,3}","{2}"]
+          },
+          a:1
+        }
+      },
+      {
+        id:"tuples", level:"intermediate",
+        title:{ar:"الصفوف (Tuple) والاستخدامات", en:"Tuples & Uses", fr:"Tuples et usages"},
+        keywords:{ar:["tuple","immutable","packing","unpacking"], en:["tuple","immutable","packing","unpacking"], fr:["tuple","immutable","packing","unpacking"]},
+        summary:{
+          ar:"غير قابلة للتغيير. مفيدة للتعبئة/التفريغ والإرجاع المتعدد.",
+          en:"Immutable, great for packing/unpacking and multi-returns.",
+          fr:"Immutables, utiles pour packing/unpacking et retours multiples."
+        },
+        code:`pt = (3,4)\nx,y = pt\nprint(x,y)`,
+        expect:`3 4`,
+        quiz:{
+          q:{ar:"هل tuple قابلة للتغيير؟", en:"Are tuples mutable?", fr:"Les tuples sont-ils mutables ?"},
+          options:{ar:["نعم","لا"], en:["Yes","No"], fr:["Oui","Non"]},
+          a:1
+        }
+      },
+      {
+        id:"comp", level:"intermediate",
+        title:{ar:"Comprehensions (قوائم/مجموعات/قواميس)", en:"Comprehensions (list/set/dict)", fr:"Compréhensions (liste/ensemble/dict)"},
+        keywords:{ar:["list comprehension","dict comp"], en:["list comprehension","dict comp"], fr:["list comprehension","dict comp"]},
+        summary:{
+          ar:"صيغة مختصرة لبناء بنى من تكرار وشرط.",
+          en:"Compact syntax to build structures from loops and conditions.",
+          fr:"Syntaxe compacte pour construire via boucles et conditions."
+        },
+        code:`squares = [i*i for i in range(5)]\nevens = {i for i in range(10) if i%2==0}\nphone = {c:ord(c) for c in 'abc'}\nprint(squares)\nprint(evens)\nprint(phone)`,
+        expect:`[0, 1, 4, 9, 16]\n{0, 2, 4, 6, 8}\n{'a': 97, 'b': 98, 'c': 99}`,
+        quiz:{
+          q:{ar:"ما ناتج [i for i in range(3)]؟", en:"Output of [i for i in range(3)]?", fr:"Sortie de [i for i in range(3)] ?"},
+          options:{
+            ar:["[0,1,2]","[1,2,3]","[0,1,2,3]","[2,1,0]"],
+            en:["[0,1,2]","[1,2,3]","[0,1,2,3]","[2,1,0]"],
+            fr:["[0,1,2]","[1,2,3]","[0,1,2,3]","[2,1,0]"]
+          },
+          a:0
+        }
+      },
+      {
+        id:"exceptions", level:"intermediate",
+        title:{ar:"الاستثناءات والتعامل معها", en:"Exceptions & Handling", fr:"Exceptions et gestion"},
+        keywords:{ar:["try","except","finally","raise"], en:["try","except","finally","raise"], fr:["try","except","finally","raise"]},
+        summary:{
+          ar:"أخطاء وقت التشغيل تُلتقط بـ try/except. استخدم finally للتنظيف.",
+          en:"Runtime errors are caught with try/except. Use finally for cleanup.",
+          fr:"Les erreurs d’exécution se gèrent avec try/except. finally pour le nettoyage."
+        },
+        code:`try:\n    x = int('10')\n    y = int('oops')\nexcept ValueError:\n    print('تحويل غير صالح')\nfinally:\n    print('تم')`,
+        expect:`تحويل غير صالح\nتم`,
+        quiz:{
+          q:{ar:"أي كتلة تُنفذ مهما حدث؟", en:"Which block always executes?", fr:"Quel bloc s’exécute toujours ?"},
+          options:{ar:["try","except","else","finally"], en:["try","except","else","finally"], fr:["try","except","else","finally"]},
+          a:3
+        }
+      },
+      {
+        id:"files", level:"intermediate",
+        title:{ar:"التعامل مع الملفات I/O", en:"File I/O", fr:"Entrées/Sorties de fichiers"},
+        keywords:{ar:["open","read","with"], en:["open","read","with"], fr:["open","read","with"]},
+        summary:{
+          ar:"افتح الملف باستخدام with لإغلاقه تلقائيًا. أنماط: 'r','w','a','b'.",
+          en:"Use with when opening files to auto-close. Modes: 'r','w','a','b'.",
+          fr:"Utilisez with pour ouvrir et fermer automatiquement. Modes : 'r','w','a','b'."
+        },
+        code:`# مثال توضيحي فقط\nwith open('data.txt','w', encoding='utf-8') as f:\n    f.write('hello')\nprint('كتبنا ملفاً')`,
+        expect:`كتبنا ملفاً`,
+        quiz:{
+          q:{ar:"ما فائدة with عند فتح ملف؟", en:"Why use with when opening a file?", fr:"Pourquoi utiliser with lors de l’ouverture ?"},
+          options:{
+            ar:["تلوين الكود","إغلاق تلقائي للملف","تسريع القراءة","تشغيل المروحة"],
+            en:["Syntax highlighting","Automatic file closing","Faster reading","Spin the fan"],
+            fr:["Coloration syntaxique","Fermeture automatique","Lecture plus rapide","Faire tourner le ventilateur"]
+          },
+          a:1
+        }
+      },
+      {
+        id:"oop", level:"advanced",
+        title:{ar:"البرمجة الكائنية OOP", en:"Object-Oriented Programming (OOP)", fr:"Programmation orientée objet (POO)"},
+        keywords:{ar:["class","object","init","inherit"], en:["class","object","init","inherit"], fr:["class","object","init","inherit"]},
+        summary:{
+          ar:"صمم فئات بخصائص وطرق. __init__ للمُهيّئ، الوراثة لإعادة الاستخدام.",
+          en:"Define classes with attributes/methods. __init__ is the initializer, inheritance for reuse.",
+          fr:"Définissez des classes avec attributs/méthodes. __init__ initialise, héritage pour réutiliser."
+        },
+        code:`class Person:\n    def __init__(self, name):\n        self.name = name\n    def hello(self):\n        return f'Hi, I\\'m {self.name}'\n\nprint(Person('Mona').hello())`,
+        expect:`Hi, I'm Mona`,
+        quiz:{
+          q:{ar:"اسم الدالة المُهيّئة؟", en:"Initializer method name?", fr:"Nom de la méthode d’initialisation ?"},
+          options:{ar:["construct","__start__","__init__","init"], en:["construct","__start__","__init__","init"], fr:["construct","__start__","__init__","init"]},
+          a:2
+        }
+      },
+      {
+        id:"iter", level:"advanced",
+        title:{ar:"المكررات والمولّدات Iterators/Generators", en:"Iterators & Generators", fr:"Itérateurs & Générateurs"},
+        keywords:{ar:["__iter__","__next__","yield"], en:["__iter__","__next__","yield"], fr:["__iter__","__next__","yield"]},
+        summary:{
+          ar:"المولّدات تستخدم yield لإرجاع سلسلة قيم كسولياً.",
+          en:"Generators use yield to lazily produce a sequence of values.",
+          fr:"Les générateurs utilisent yield pour produire paresseusement des valeurs."
+        },
+        code:`def countdown(n):\n    while n>0:\n        yield n\n        n-=1\nprint(list(countdown(3)))`,
+        expect:`[3, 2, 1]`,
+        quiz:{
+          q:{ar:"الكلمة المفتاحية في المولّد؟", en:"Keyword used in generators?", fr:"Mot-clé utilisé dans les générateurs ?"},
+          options:{ar:["yield","return","give","gen"], en:["yield","return","give","gen"], fr:["yield","return","give","gen"]},
+          a:0
+        }
+      },
+      {
+        id:"decorators", level:"advanced",
+        title:{ar:"المزيّنات Decorators", en:"Decorators", fr:"Décorateurs"},
+        keywords:{ar:["@decorator","closure","func"], en:["@decorator","closure","func"], fr:["@decorator","closure","func"]},
+        summary:{
+          ar:"تغليف دالة لإضافة سلوك قبل/بعد التنفيذ.",
+          en:"Wrap a function to add behavior before/after execution.",
+          fr:"Envelopper une fonction pour ajouter un comportement avant/après."
+        },
+        code:`def logger(fn):\n    def wrap(*a, **k):\n        print('start')\n        out = fn(*a, **k)\n        print('end')\n        return out\n    return wrap\n\n@logger\ndef add(x,y):\n    return x+y\nprint(add(2,3))`,
+        expect:`start\nend\n5`,
+        quiz:{
+          q:{ar:"الرمز المستخدم لتطبيق المزيّن؟", en:"Symbol used to apply a decorator?", fr:"Symbole pour appliquer un décorateur ?"},
+          options:{ar:["$","@","#","&"], en:["$","@","#","&"], fr:["$","@","#","&"]},
+          a:1
+        }
+      },
+      {
+        id:"testing", level:"advanced",
+        title:{ar:"الاختبارات الوحدوية (فكرة)", en:"Unit Testing (idea)", fr:"Tests unitaires (idée)"},
+        keywords:{ar:["unittest","assert"], en:["unittest","assert"], fr:["unittest","assert"]},
+        summary:{
+          ar:"اكتب اختبارات تضمن صحة السلوك باستخدام unittest أو pytest.",
+          en:"Write tests to ensure correct behavior using unittest or pytest.",
+          fr:"Écrivez des tests pour garantir le comportement avec unittest ou pytest."
+        },
+        code:`def add(a,b):\n    return a+b\n\n# تصور ناتج اختبار\nprint('OK' if add(2,2)==4 else 'FAIL')`,
+        expect:`OK`,
+        quiz:{
+          q:{ar:"الغرض من الاختبارات؟", en:"Purpose of unit tests?", fr:"Objet des tests unitaires ?"},
+          options:{
+            ar:["إبطاء التطوير","تحسين الأداء دائمًا","التحقق من صحة السلوك","تزيين الكود"],
+            en:["Slow down development","Always improve performance","Verify behavior","Decorate code"],
+            fr:["Ralentir le dev","Toujours améliorer les perfs","Vérifier le comportement","Décorer le code"]
+          },
+          a:2
+        }
+      },
+      {
+        id:"algos", level:"advanced",
+        title:{ar:"تمارين خوارزميات كلاسيكية", en:"Classic Algorithm Exercises", fr:"Exercices d’algorithmes classiques"},
+        keywords:{ar:["algo","two pointers","DP"], en:["algo","two pointers","DP"], fr:["algo","two pointers","DP"]},
+        summary:{
+          ar:"مسائل تدريبية: مجموع زوج، فرز مخصص، تكرار أحرف، ديناميكية بسيطة.",
+          en:"Practice: two-sum, custom sort, char counts, basic DP.",
+          fr:"Pratique : two-sum, tri personnalisé, comptage, DP basique."
+        },
+        code:`def two_sum(nums, target):\n    seen = {}\n    for i, n in enumerate(nums):\n        if target-n in seen:\n            return [seen[target-n], i]\n        seen[n] = i\n\nprint(two_sum([2,7,11,15], 9))`,
+        expect:`[0, 1]`,
+        quiz:{
+          q:{ar:"تعقيد two_sum بالهاش؟", en:"Time complexity of two_sum using a hash map?", fr:"Complexité de two_sum avec table de hachage ?"},
+          options:{ar:["O(n^2)","O(n)","O(log n)","O(1)"], en:["O(n^2)","O(n)","O(log n)","O(1)"], fr:["O(n^2)","O(n)","O(log n)","O(1)"]},
+          a:1
+        }
+      }
+    ];
+
+    /* ============================================================
+       State, DOM refs & helpers
+       ============================================================ */
+    const lessonListEl   = document.getElementById('lessonList');
+    const curriculumEl   = document.getElementById('curriculum');
+    const searchInput    = document.getElementById('search');
+    const progressBar    = document.getElementById('progressBar');
+    const progressPct    = document.getElementById('progressPct');
+    const completedCount = document.getElementById('completedCount');
+    const smartMode      = document.getElementById('smartMode');
+    const toast          = document.getElementById('toast');
+    const levelChipsBox  = document.getElementById('levelChips');
+
+    const expandAllBtn   = document.getElementById('expandAll');
+    const collapseAllBtn = document.getElementById('collapseAll');
+    const resetProgressBtn = document.getElementById('resetProgress');
+
+    const langSelect     = document.getElementById('langSelect');
+    const badgeLine      = document.getElementById('badgeLine');
+    const heroTitle      = document.getElementById('heroTitle');
+    const heroLead       = document.getElementById('heroLead');
+    const langLabel      = document.getElementById('langLabel');
+    const exportBtn      = document.getElementById('exportBtn');
+    const importLbl      = document.getElementById('importLbl');
+    const importFile     = document.getElementById('importFile');
+    const smartLabel     = document.getElementById('smartLabel');
+    const tipTitle       = document.getElementById('tipTitle');
+    const tipsList       = document.getElementById('tipsList');
+    const smartDesc      = document.getElementById('smartDesc');
+    const footerMade     = document.getElementById('footerMade');
+    const footerHydrate  = document.getElementById('footerHydrate');
+    const streakMsg      = document.getElementById('streakMsg');
+
+    let progress = loadProgress();
+    let currentFilter = 'all';
+    let currentLang = validateLang(localStorage.getItem(LANG_KEY) || getLang());
+
+    function validateLang(l){ return ['ar','en','fr'].includes(l) ? l : 'ar'; }
+    function loadProgress(){
+      try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }catch{ return {}; }
+    }
+    function saveProgress(state){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function loadSmart(){ return localStorage.getItem(SMART_KEY)==='1'; }
+    function saveSmart(v){ localStorage.setItem(SMART_KEY, v?'1':'0'); }
+
+    function t(key){
+      const pack = i18n[currentLang] || i18n.ar;
+      return pack[key] ?? key;
+    }
+
+    function levelBadge(level){
+      const pack = i18n[currentLang];
+      if(level==='beginner') return pack.levelsBadge.beginner;
+      if(level==='intermediate') return pack.levelsBadge.intermediate;
+      return pack.levelsBadge.advanced;
+    }
+
+    function setDirAndLang(){
+      document.documentElement.dir  = i18n[currentLang]._dir;
+      document.documentElement.lang = i18n[currentLang]._lang;
+      // Font priority: Cairo for AR content; Inter works everywhere
+      document.body.style.fontFamily = currentLang==='ar'
+        ? `"Cairo","Inter",system-ui,-apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial`
+        : `"Inter","Cairo",system-ui,-apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial`;
+    }
+
+    /* ============================================================
+       Rendering: Sidebar, Curriculum, Language application
+       ============================================================ */
+
+    function renderSidebar(filter='all', query=''){
+      lessonListEl.innerHTML = '';
+      const q = query.trim().toLowerCase();
+      lessons.forEach((ls, idx)=>{
+        const matchesLevel = (filter==='all' || ls.level===filter);
+        const kw = (ls.keywords[currentLang]||[]).join(' ').toLowerCase();
+        const title = ls.title[currentLang].toLowerCase();
+        const matchesQuery = !q || title.includes(q) || kw.includes(q);
+        if(matchesLevel && matchesQuery){
+          const el = document.createElement('div');
+          el.className = 'lesson-link' + (progress[ls.id]?.done ? ' done' : '');
+          el.dataset.target = ls.id;
+          el.setAttribute('role','button');
+          el.setAttribute('tabindex','0');
+          el.innerHTML = `<div style="flex:1">
+              <div class="row" style="justify-content:space-between">
+                <strong>${(idx+1).toString().padStart(2,'0')}. ${ls.title[currentLang]}</strong>
+                <small>${levelBadge(ls.level)}</small>
+              </div>
+              <small>${(ls.keywords[currentLang]||[]).join(' · ')}</small>
+            </div>
+            <div>${progress[ls.id]?.done? i18n[currentLang].icons.check : i18n[currentLang].icons.book}</div>`;
+          el.addEventListener('click', ()=> scrollToLesson(ls.id));
+          el.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter'||ev.key===' ') scrollToLesson(ls.id); });
+          lessonListEl.appendChild(el);
+        }
+      });
+    }
+
+    function buildCurriculum(){
+      curriculumEl.innerHTML = '';
+      lessons.forEach(ls=>{
+        const card = document.createElement('div');
+        card.className = 'lesson';
+        card.id = `lesson-${ls.id}`;
+        card.dataset.level = ls.level;
+
+        const header = document.createElement('div');
+        header.className = 'header';
+        header.innerHTML = `<h3>${ls.title[currentLang]}</h3>
+          <div class="meta">
+            <span>${levelBadge(ls.level)}</span>
+            <span class="kbd">${(ls.keywords[currentLang]||[''])[0]}</span>
+            <button class="btn" data-done>${t('btn_done')}</button>
+            <button class="btn ghost" data-toggle>${t('btn_show')}</button>
+          </div>`;
+
+        const body = document.createElement('div');
+        body.className = 'body';
+        body.innerHTML = `
+          <p>${ls.summary[currentLang]}</p>
+          <div class="codebox" style="margin:10px 0">
+            <div class="toolbar">
+              <div class="title">${t('code_title')}</div>
+              <div class="actions">
+                <button class="btn" data-copy>${t('copy')}</button>
+                <button class="btn" data-run>${t('run')}</button>
+              </div>
+            </div>
+            <textarea class="editor" spellcheck="false">${ls.code}</textarea>
+            <div class="output" data-output>${t('expected')}</div>
+          </div>
+          <div class="quiz" data-quiz>
+            <h4>${t('quiz_title')}</h4>
+            <div class="qtext">${ls.quiz.q[currentLang]}</div>
+            ${ls.quiz.options[currentLang].map((op,i)=>`
+              <label class="option">
+                <input type="radio" name="q-${ls.id}" value="${i}"> <span>${op}</span>
+              </label>`).join('')}
+            <button class="btn" data-check>${t('run')}</button>
+            <div class="result" data-result></div>
+          </div>
+        `;
+
+        card.appendChild(header); card.appendChild(body);
+        curriculumEl.appendChild(card);
+
+        // Events
+        header.querySelector('[data-toggle]').addEventListener('click', ()=>{
+          card.classList.toggle('open');
+        });
+        header.querySelector('[data-done]').addEventListener('click', ()=>{
+          setDone(ls.id, !(progress[ls.id]?.done));
+          updateUI();
+          showToast(progress[ls.id]?.done ? t('status_done') : '');
+        });
+
+        const runBtn = body.querySelector('[data-run]');
+        const copyBtn = body.querySelector('[data-copy]');
+        const editor = body.querySelector('.editor');
+        const output = body.querySelector('[data-output]');
+        const quiz = body.querySelector('[data-quiz]');
+        const checkBtn = body.querySelector('[data-check]');
+        const result = body.querySelector('[data-result]');
+
+        copyBtn.addEventListener('click', ()=>{
+          navigator.clipboard.writeText(editor.value).then(()=>showToast(t('toast_copied')));
+        });
+
+        runBtn.addEventListener('click', ()=>{
+          // Fake "run": show expected output; warn if code deviates significantly
+          const expect = ls.expect.trim();
+          const looksSimilar = editor.value.replace(/\s+/g,' ').trim().toLowerCase()
+                                .includes(ls.code.replace(/\s+/g,' ').trim().toLowerCase().slice(0,24));
+          output.textContent = looksSimilar ? expect : (expect + "\n(⚠️ " + (currentLang==='ar' ? "عدّلت الكود، قد تختلف المخرجات" : currentLang==='fr' ? "Vous avez modifié le code, la sortie peut différer" : "You altered the code; output may differ") + ")");
+        });
+
+        checkBtn.addEventListener('click', ()=>{
+          const val = quiz.querySelector('input[type=radio]:checked');
+          if(!val){ result.textContent = t('choose_first'); result.style.color = 'var(--warn)'; return; }
+          if(+val.value === ls.quiz.a){
+            result.textContent = t('correct');
+            result.style.color = 'var(--good)';
+            setDone(ls.id, true);
+            updateUI();
+            if(smartMode.checked){ openNext(ls.id); }
+          }else{
+            result.textContent = t('wrong');
+            result.style.color = 'var(--bad)';
+          }
+        });
+      });
+    }
+
+    function openNext(id){
+      const idx = lessons.findIndex(x=>x.id===id);
+      if(idx>=0 && idx<lessons.length-1){
+        const next = document.getElementById('lesson-'+lessons[idx+1].id);
+        if(next){ next.classList.add('open'); scrollToLesson(lessons[idx+1].id); showToast(t('toast_next')); }
+      }
+    }
+
+    function setDone(id, done){
+      progress[id] = progress[id] || {};
+      progress[id].done = !!done;
+      saveProgress(progress);
+      const link = [...lessonListEl.children].find(el=>el.dataset.target===id);
+      if(link){ link.classList.toggle('done', !!done); link.querySelector('div:last-child').textContent = done? i18n[currentLang].icons.check : i18n[currentLang].icons.book; }
+    }
+
+    function scrollToLesson(id){
+      const el = document.getElementById('lesson-'+id);
+      if(el){ el.classList.add('open'); window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 20, behavior:'smooth' }); }
+    }
+
+    function calcProgress(){
+      const total = lessons.length;
+      const done = lessons.filter(x=>progress[x.id]?.done).length;
+      const pct = Math.round((done/total)*100);
+      progressBar.style.width = pct+'%';
+      progressPct.textContent = pct+'%';
+      completedCount.textContent = `${done}/${total}`;
+    }
+
+    function updateUI(){
+      // Static labels via i18n
+      document.querySelector('[data-i18n="levels"]').textContent = t('levels');
+      document.querySelector('[data-i18n="lessons"]').textContent = t('lessons');
+      document.querySelector('[data-i18n="progress"]').textContent = t('progress');
+      document.querySelector('[data-i18n="units"]').textContent = t('units');
+      document.querySelector('[data-i18n="level_all"]').textContent = t('level_all');
+      document.querySelector('[data-i18n="level_beginner"]').textContent = t('level_beginner');
+      document.querySelector('[data-i18n="level_intermediate"]').textContent = t('level_intermediate');
+      document.querySelector('[data-i18n="level_advanced"]').textContent = t('level_advanced');
+      document.querySelector('[data-i18n="control_panel"]').textContent = t('cp');
+      document.querySelector('[data-i18n="open_all"]').textContent = t('open_all');
+      document.querySelector('[data-i18n="collapse_all"]').textContent = t('collapse_all');
+      document.querySelector('[data-i18n="reset"]').textContent = t('reset');
+
+      exportBtn.textContent = t('export');
+      importLbl.textContent = t('import');
+      langLabel.textContent = t('lang_label');
+      searchInput.placeholder = t('search_ph');
+      badgeLine.textContent = t('hero_badge');
+      heroTitle.innerHTML   = t('hero_title');
+      heroLead.textContent  = t('hero_lead');
+      smartLabel.textContent= t('smart_label');
+      tipTitle.textContent  = t('tip_title');
+      tipsList.innerHTML    = i18n[currentLang].tips.map(li=>`<li>${li}</li>`).join('');
+      smartDesc.textContent = t('smart_desc');
+      footerMade.textContent= t('footer_made');
+      footerHydrate.textContent = t('footer_hydrate');
+      streakMsg.textContent = t('streak');
+
+      // Rebuild dynamic parts in the selected language
+      renderSidebar(currentFilter, searchInput.value);
+      buildCurriculum();
+      calcProgress();
+
+      // Activate selected chip visually
+      [...levelChipsBox.children].forEach(ch => ch.classList.toggle('active', ch.dataset.filter===currentFilter));
+    }
+
+    function showToast(msg){
+      if(!msg) return;
+      toast.textContent = msg; toast.classList.add('show');
+      setTimeout(()=> toast.classList.remove('show'), 1600);
+    }
+
+    /* ============================================================
+       Filters & Search
+       ============================================================ */
+    levelChipsBox.querySelectorAll('.chip').forEach(ch=>{
+      ch.addEventListener('click', ()=>{
+        currentFilter = ch.dataset.filter;
+        [...levelChipsBox.children].forEach(c=>c.classList.remove('active'));
+        ch.classList.add('active');
+        updateUI();
+      });
+    });
+
+    searchInput.addEventListener('input', ()=>{
+      renderSidebar(currentFilter, searchInput.value);
+    });
+
+    /* ============================================================
+       Controls: expand/collapse/reset, smart mode
+       ============================================================ */
+    expandAllBtn.addEventListener('click', ()=>{
+      document.querySelectorAll('.lesson').forEach(l=>l.classList.add('open'));
+    });
+    collapseAllBtn.addEventListener('click', ()=>{
+      document.querySelectorAll('.lesson').forEach(l=>l.classList.remove('open'));
+    });
+    resetProgressBtn.addEventListener('click', ()=>{
+      if(confirm(t('confirm_reset'))){
+        progress = {}; saveProgress(progress); updateUI(); showToast(t('status_cleared'));
+      }
+    });
+
+    smartMode.checked = loadSmart();
+    smartMode.addEventListener('change', ()=> saveSmart(smartMode.checked));
+
+    /* ============================================================
+       Language switching + persistence
+       ============================================================ */
+    function applyLanguage(lang){
+      currentLang = validateLang(lang);
+      setLang(currentLang);
+      setDirAndLang();
+      langSelect.value = currentLang;
+      updateUI();
+    }
+
+    langSelect.addEventListener('change', (e)=>{
+      applyLanguage(e.target.value);
+    });
+
+    /* ============================================================
+       Export / Import progress (JSON file)
+       ============================================================ */
+    exportBtn.addEventListener('click', ()=>{
+      const data = {
+        _app: "PyGalaxy",
+        _ver: 1,
+        lang: currentLang,
+        smart: smartMode.checked,
+        progress
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `pygalaxy-progress-${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);
+    });
+
+    importFile.addEventListener('change', (ev)=>{
+      const file = ev.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        try{
+          const data = JSON.parse(reader.result);
+          if(data && data._app==='PyGalaxy'){
+            progress = data.progress || {};
+            saveProgress(progress);
+            const lang = validateLang(data.lang||currentLang);
+            const smart = !!data.smart;
+            smartMode.checked = smart; saveSmart(smart);
+            applyLanguage(lang);
+            showToast(i18n[currentLang].status_done);
+          }else{
+            alert("Invalid file.");
+          }
+        }catch(e){
+          alert("Invalid file.");
+        }
+      };
+      reader.readAsText(file);
+      // Reset input so the same file can be re-imported later if needed
+      ev.target.value = '';
+    });
+
+    /* ============================================================
+       Initial render
+       ============================================================ */
+    applyLanguage(currentLang);
+  </script>
+</body>
+</html>
